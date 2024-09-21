@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Carreiras - LaudAI{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-16">
+    <h1 class="text-4xl md:text-5xl font-extrabold mb-8 text-center text-primary-600 dark:text-primary-400">Carreiras na LaudAI</h1>
+
+    <section class="mb-16">
+        <h2 class="text-3xl font-bold mb-4 text-primary-600 dark:text-primary-400">Junte-se à Revolução da Radiologia com IA</h2>
+        <p class="text-lg mb-4 text-gray-700 dark:text-gray-300">Na LaudAI, você terá a oportunidade de trabalhar em projetos desafiadores, colaborar com uma equipe talentosa e fazer a diferença na vida de milhares de pessoas.</p>
+        <p class="text-lg mb-4 text-gray-700 dark:text-gray-300">Construa uma carreira de alto impacto, aprenda com os melhores e contribua para o futuro da saúde.</p>
+    </section>
+
+    <section class="mb-16 bg-gray-100 dark:bg-gray-800 p-8 rounded-lg">
+        <h2 class="text-3xl font-bold mb-8 text-center text-primary-600 dark:text-primary-400">Resultados que Impactam</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="stats-item animate__animated animate__fadeInUp bg-white dark:bg-gray-700 p-6 rounded-lg shadow-md">
+                <span class="stat-number text-4xl font-bold text-primary-600 dark:text-primary-400" data-target="70">0</span><span class="text-2xl font-bold text-primary-600 dark:text-primary-400">%</span>
+                <p class="stat-label text-gray-700 dark:text-gray-300">de Redução no tempo de geração de laudos¹</p>
+            </div>
+            <div class="stats-item animate__animated animate__fadeInUp bg-white dark:bg-gray-700 p-6 rounded-lg shadow-md">
+                <span class="stat-number text-4xl font-bold text-primary-600 dark:text-primary-400" data-target="98">0</span><span class="text-2xl font-bold text-primary-600 dark:text-primary-400">%</span>
+                <p class="stat-label text-gray-700 dark:text-gray-300">de Aumento na precisão dos diagnósticos¹</p>
+            </div>
+            <div class="stats-item animate__animated animate__fadeInUp bg-white dark:bg-gray-700 p-6 rounded-lg shadow-md">
+                <span class="stat-number text-4xl font-bold text-primary-600 dark:text-primary-400" data-target="95">0</span><span class="text-2xl font-bold text-primary-600 dark:text-primary-400">%</span>
+                <p class="stat-label text-gray-700 dark:text-gray-300">de Satisfação dos usuários Radiologistas¹</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="mb-16">
+        <h2 class="text-3xl font-bold mb-4 text-primary-600 dark:text-primary-400">LaudAI: O Futuro da Radiologia</h2>
+        <p class="text-lg mb-4 text-gray-700 dark:text-gray-300">A LaudAI está redefinindo o futuro da radiologia com uma solução inovadora que une inteligência artificial de ponta com a expertise de radiologistas experientes. Nossa missão é oferecer uma plataforma que impulsiona a prática médica, garantindo diagnósticos mais precisos, rápidos e eficientes.</p>
+    </section>
+
+    <section class="mb-16">
+        <h2 class="text-3xl font-bold mb-4 text-primary-600 dark:text-primary-400">Vagas Abertas</h2>
+        <p class="text-lg mb-8 text-gray-700 dark:text-gray-300">Na LaudAI, você encontra um ambiente de trabalho dinâmico e desafiador, com oportunidades de crescimento e participação na empresa, dependendo do cargo e do seu impacto.</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {% for job in jobs %}
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 animate__animated animate__fadeInUp">
+                <h3 class="text-xl font-semibold mb-2 text-primary-600 dark:text-primary-400">{{ job.title }}</h3>
+                <p class="text-gray-700 dark:text-gray-300">{{ job.description }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="text-center">
+        <h2 class="text-3xl font-bold mb-4 text-primary-600 dark:text-primary-400">Faça parte do Time LaudAI</h2>
+        <p class="text-lg mb-8 text-gray-700 dark:text-gray-300">Tem interesse em fazer parte da revolução da radiologia com IA? Entre em contato conosco! Estamos buscando talentos apaixonados por tecnologia e inovação.</p>
+        <a href="https://forms.gle/nu7qC22rcXAwVX438" class="bg-primary-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-opacity-90 transition duration-300">Inscreva-se Agora</a>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    function animateValue(obj, start, end, duration) {
+        let startTimestamp = null;
+        const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            obj.innerHTML = Math.floor(progress * (end - start) + start);
+            if (progress < 1) {
+                window.requestAnimationFrame(step);
+            }
+        };
+        window.requestAnimationFrame(step);
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const target = entry.target.querySelector('.stat-number');
+                const endValue = parseInt(target.getAttribute('data-target'));
+                animateValue(target, 0, endValue, 2000);
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.stats-item').forEach(item => {
+        observer.observe(item);
+    });
+</script>
+{% endblock %}

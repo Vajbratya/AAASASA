@@ -1,0 +1,21 @@
+{
+  "name": "laudai",
+  "version": "1.0.0",
+  "description": "LaudAI: IA Avançada para Laudos Radiológicos",
+  "scripts": {
+    "build": "tailwindcss -i ./src/input.css -o ./static/css/output.css",
+    "dev": "tailwindcss -i ./src/input.css -o ./static/css/output.css --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "tailwindcss": "^3.0.7",
+    "@tailwindcss/forms": "^0.3.3",
+    "@tailwindcss/typography": "^0.4.1",
+    "@tailwindcss/aspect-ratio": "^0.2.1",
+    "@tailwindcss/line-clamp": "^0.2.2",
+    "autoprefixer": "^10.4.0",
+    "postcss": "^8.4.5"
+  }
+}

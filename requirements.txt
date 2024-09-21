@@ -1,0 +1,11 @@
+Flask
+Flask-SQLAlchemy
+Flask-WTF
+Flask-Migrate
+oauthlib
+requests
+anthropic
+aiohttp
+gunicorn
+openai
+psycopg2-binary

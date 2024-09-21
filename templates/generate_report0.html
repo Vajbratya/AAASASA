@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LaudAI - Gerar Laudo</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --radius: 1rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9;
+  }
+}
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+            line-height: 1.5;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Navbar styles */
+        .navbar {
+            background-color: hsl(var(--background));
+            border-bottom: 1px solid hsl(var(--border));
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: hsl(var(--foreground));
+            text-decoration: none;
+        }
+
+        .navbar-nav {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: hsl(var(--foreground));
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            transition: background-color 0.3s;
+        }
+
+        .nav-link:hover {
+            background-color: hsl(var(--accent));
+        }
+
+        /* Existing styles */
+        h1, h2 {
+            color: hsl(var(--primary));
+            margin-bottom: 1rem;
+        }
+
+        .input-container {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-container label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: hsl(var(--foreground));
+        }
+
+        .input-container textarea,
+        .input-container select {
+            width: 100%;
+            padding: 0.5rem;
+            border: none;
+            border-bottom: 1px solid hsl(var(--border));
+            border-radius: 0;
+            font-size: 0.875rem;
+            background-color: transparent;
+            color: hsl(var(--foreground));
+            transition: border-color 0.3s;
+        }
+
+        .input-container textarea:focus,
+        .input-container select:focus {
+            outline: none;
+            border-bottom-color: hsl(var(--primary));
+        }
+
+        button {
+            padding: 0.5rem 1rem;
+            background-color: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-right: 0.5rem;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: hsl(var(--primary), 0.9);
+        }
+
+        .spinner {
+            display: none;
+            width: 2rem;
+            height: 2rem;
+            border: 0.25rem solid hsl(var(--secondary));
+            border-top: 0.25rem solid hsl(var(--primary));
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 1rem auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid hsl(var(--border));
+            margin-bottom: 1rem;
+        }
+
+        .tab {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.3s;
+        }
+
+        .tab.active {
+            border-bottom-color: hsl(var(--primary));
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: var(--radius);
+            margin-bottom: 1rem;
+            background-color: hsl(var(--muted));
+            color: hsl(var(--muted-foreground));
+        }
+
+        .toggle {
+            position: relative;
+            display: inline-block;
+            width: 3rem;
+            height: 1.5rem;
+        }
+
+        .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: hsl(var(--muted));
+            transition: .4s;
+            border-radius: 1.5rem;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 1.25rem;
+            width: 1.25rem;
+            left: 0.125rem;
+            bottom: 0.125rem;
+            background-color: hsl(var(--background));
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        .toggle input:checked + .toggle-slider {
+            background-color: hsl(var(--primary));
+        }
+
+        .toggle input:checked + .toggle-slider:before {
+            transform: translateX(1.5rem);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="{{ url_for('index') }}" class="navbar-brand">LaudAI</a>
+        <div class="navbar-nav">
+            <a href="{{ url_for('profile') }}" class="nav-link">Início</a>
+            <a href="{{ url_for('logout') }}" class="nav-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+            </a>
+            <label class="toggle">
+                <input type="checkbox" id="darkModeToggle">
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>Gerar Laudo</h1>
+
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('noTemplate')">Sem Template</div>
+            <div class="tab" onclick="switchTab('withTemplate')">Com Template</div>
+        </div>
+
+        <div id="noTemplateTab">
+            <form id="laudoForm" method="POST" action="{{ url_for('generate_report') }}">
+                <div class="input-container">
+                    <label for="exame">Exame:</label>
+                    <textarea id="exame" name="exame" rows="4" required></textarea>
+                </div>
+                <div class="input-container">
+                    <label for="achados">Achados:</label>
+                    <textarea id="achados" name="achados" rows="8" required></textarea>
+                </div>
+                <button type="submit">Gerar Laudo</button>
+            </form>
+        </div>
+
+        <div id="withTemplateTab" style="display: none;">
+            <div class="input-container">
+                <label for="templateSelect">Selecione um Template:</label>
+                <select id="templateSelect">
+                    <option value="">Escolha um template</option>
+                    {% for template in templates %}
+                        <option value="{{ template.id }}">{{ template.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <form id="templateForm" method="POST" action="{{ url_for('generate_report') }}">
+                <div class="input-container">
+                    <label for="templateExame">Exame:</label>
+                    <textarea id="templateExame" name="exame" rows="4" required></textarea>
+                </div>
+                <div class="input-container">
+                    <label for="templateAchados">Achados:</label>
+                    <textarea id="templateAchados" name="achados" rows="8" required></textarea>
+                </div>
+                <input type="hidden" id="templateId" name="template_id">
+                <button type="submit">Gerar Laudo com Template</button>
+            </form>
+        </div>
+
+        <div id="spinner" class="spinner"></div>
+
+        <div class="alert">
+            Atenção: Revise sempre o laudo gerado antes de utilizá-lo.
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('laudoForm').addEventListener('submit', function(e) {
+            document.getElementById('spinner').style.display = 'block';
+        });
+
+        document.getElementById('templateForm').addEventListener('submit', function(e) {
+            document.getElementById('spinner').style.display = 'block';
+        });
+
+        function switchTab(tabId) {
+            document.getElementById('noTemplateTab').style.display = tabId === 'noTemplate' ? 'block' : 'none';
+            document.getElementById('withTemplateTab').style.display = tabId === 'withTemplate' ? 'block' : 'none';
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        document.getElementById('templateSelect').addEventListener('change', function(e) {
+            document.getElementById('templateId').value = e.target.value;
+            // Here you would typically load the template content and populate the form fields
+            if (e.target.value) {
+                fetch(`/get_template/${e.target.value}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('templateExame').value = data.content;
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+        });
+
+        document.getElementById('darkModeToggle').addEventListener('change', function(e) {
+            document.body.classList.toggle('dark', e.target.checked);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LaudAI: IA Avançada para Laudos Radiológicos - Pro</title>
+    <meta name="description" content="Transforme sua prática radiológica com a LaudAI. ⚡ Laudos rápidos, precisão incomparável, workflow otimizado. Experimente a revolução da IA na radiologia.">
+    <meta name="keywords" content="radiologia, inteligência artificial, laudos, ia, laudos radiológicos, diagnóstico, saúde, medicina">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <link rel="preload" href="/static/fonts/FKGroteskNeue-Regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/static/fonts/FKGroteskNeue-Medium.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/static/fonts/FKGroteskNeue-Bold.woff2" as="font" type="font/woff2" crossorigin>
+    <style>
+        :root {
+            --primary-color: #2c5282;
+            --secondary-color: #1e3a5f;
+            --background-color: #1a202c;
+            --text-color: #ffffff;
+            --accent-color: #40e0d0;
+        }
+
+        @font-face {
+            font-family: 'FK Grotesk Neue';
+            src: url("/static/fonts/FKGroteskNeue-Regular.woff2") format('woff2');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'FK Grotesk Neue';
+            src: url("/static/fonts/FKGroteskNeue-Medium.woff2") format('woff2');
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'FK Grotesk Neue';
+            src: url("/static/fonts/FKGroteskNeue-Bold.woff2") format('woff2');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        body {
+            font-family: 'FK Grotesk Neue', 'Montserrat', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .hover-scale {
+            transition: transform 0.3s ease;
+        }
+
+        .hover-scale:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--background-color);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-color);
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .float-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 5px #20808D, 0 0 10px #20808D, 0 0 15px #20808D; }
+            50% { text-shadow: 0 0 10px #2E5E5A, 0 0 20px #2E5E5A, 0 0 30px #2E5E5A; }
+        }
+
+        .animate-glow {
+            animation: glow 3s infinite;
+        }
+
+        .workflow-container {
+            position: relative;
+            min-height: 600px;
+            perspective: 1000px;
+        }
+
+        #particles-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .workflow-path {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 400px;
+            transform: translateY(-50%);
+            z-index: 2;
+        }
+
+        .workflow-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 3;
+            transform-style: preserve-3d;
+        }
+
+        .workflow-step {
+            width: 200px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px) translateZ(0px);
+            transition: all 0.5s ease;
+            will-change: transform, opacity;
+        }
+
+        .workflow-step-icon {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 1rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .workflow-step:hover .workflow-step-icon {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 15px 35px rgba(32,128,141,0.3);
+        }
+
+        .workflow-step.active .workflow-step-icon {
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-5px);
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--background-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .particles-js-canvas-el {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .testimonial-container {
+            overflow: hidden;
+            width: 100%;
+            position: relative;
+        }
+
+        .testimonial-slider {
+            display: flex;
+            transition: transform 1s ease-in-out;
+        }
+
+        .testimonial {
+            min-width: 50%;
+            box-sizing: border-box;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .testimonial.active {
+            opacity: 1;
+        }
+
+        .testimonial-card {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .testimonial-card p {
+            margin-bottom: 10px;
+        }
+
+        .testimonial-card .author {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .testimonial-card .position {
+            color: rgba(255, 255, 255, 0.7);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+    <div class="preloader" role="status" aria-label="Carregando página">
+        <div class="loader"></div>
+    </div>
+
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PHXLDFDG" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+    <header class="fixed w-full z-50 gradient-bg">
+        <nav class="container mx-auto px-6 py-3" aria-label="Navegação principal">
+            <div class="flex justify-between items-center">
+                <a href="#" class="text-2xl font-bold text-white hover-scale" aria-label="LaudAI - Página Inicial">
+                    <span class="text-gradient">Laud</span>AI
+                </a>
+                <div class="hidden md:flex space-x-6">
+                    <a href="#features" class="hover:text-accent-color transition duration-300">Recursos</a>
+                    <a href="#how-it-works" class="hover:text-accent-color transition duration-300">Como Funciona</a>
+                    <a href="#testimonials" class="hover:text-accent-color transition duration-300">Depoimentos</a>
+                    <a href="#plans" class="hover:text-accent-color transition duration-300">Planos</a>
+                </div>
+                <button class="md:hidden focus:outline-none" aria-label="Toggle menu" aria-expanded="false">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="hero" class="pt-32 pb-20 px-6">
+            <div class="container mx-auto flex flex-col items-center text-center">
+                <h1 class="text-4xl md:text-6xl font-bold mb-6 animate__animated animate__fadeInDown">
+                    Revolucione seus <span class="text-gradient">Laudos Radiológicos</span> com IA
+                </h1>
+                <p class="text-xl mb-8 animate__animated animate__fadeInUp">
+                    Aumente sua eficiência e precisão com a LaudAI, a plataforma de IA que transforma a maneira como você cria laudos.
+                </p>
+                <a href="https://laudai.online/profile" class="btn-primary animate__animated animate__fadeInUp mb-10">
+                    Comece Agora
+                </a>
+                <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
+                <dotlottie-player src="https://lottie.host/3416a750-ab84-49f1-8f7f-e9d05c02aba2/OzZ5DoNuLa.json" background="transparent" speed="1" style="width: 350px; height: 350px;" loop autoplay></dotlottie-player>
+            </div>
+        </section>
+
+        <section id="features" class="py-20 px-6 bg-gray-800">
+            <div class="container mx-auto">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-gradient">
+                    Recursos Poderosos
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="glass-effect p-6 rounded-lg hover-scale">
+                        <i class="fas fa-brain text-4xl mb-4 text-accent-color" aria-hidden="true"></i>
+                        <h3 class="text-xl font-semibold mb-2">IA Avançada</h3>
+                        <p>Utilize algoritmos de ponta para gerar laudos precisos e detalhados em questão de segundos.</p>
+                    </div>
+                    <div class="glass-effect p-6 rounded-lg hover-scale">
+                        <i class="fas fa-user-md text-4xl mb-4 text-accent-color" aria-hidden="true"></i>
+                        <h3 class="text-xl font-semibold mb-2">Personalização</h3>
+                        <p>Adapte os laudos ao seu estilo pessoal e às necessidades específicas de cada paciente.</p>
+                    </div>
+                    <div class="glass-effect p-6 rounded-lg hover-scale">
+                        <i class="fas fa-chart-line text-4xl mb-4 text-accent-color" aria-hidden="true"></i>
+                        <h3 class="text-xl font-semibold mb-2">Insights</h3>
+                        <p>Obtenha insights valiosos com análises detalhadas do seu desempenho e eficiência.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="how-it-works" class="py-20 px-6">
+            <div class="container mx-auto">
+                <h2 class="text-4xl md:text-5xl font-bold text-center mb-16 text-gradient animate-glow">
+                    Como a LaudAI Funciona
+                </h2>
+                <div class="workflow-container relative">
+                    <div id="particles-js"></div>
+                    <svg class="workflow-path" viewBox="0 0 1000 400" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:#20808D;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#2E5E5A;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <path d="M0,200 Q250,100 500,200 T1000,200" fill="none" stroke="url(#gradient)" stroke-width="4" />
+                    </svg>
+                    <div class="workflow-steps">
+                        <div class="workflow-step" data-step="1">
+                            <div class="workflow-step-icon"><i class="fas fa-file-medical" aria-hidden="true"></i></div>
+                            <h3 class="text-xl font-semibold mb-2">Seleção do Exame</h3>
+                            <p>Escolha o tipo de exame para iniciar o processo.</p>
+                        </div>
+                        <div class="workflow-step" data-step="2">
+                            <div class="workflow-step-icon"><i class="fas fa-keyboard" aria-hidden="true"></i></div>
+                            <h3 class="text-xl font-semibold mb-2">Entrada de Dados</h3>
+                            <p>Insira observações detalhadas do exame.</p>
+                        </div>
+                        <div class="workflow-step" data-step="3">
+                            <div class="workflow-step-icon"><i class="fas fa-brain" aria-hidden="true"></i></div>
+                            <h3 class="text-xl font-semibold mb-2">Processamento IA</h3>
+                            <p>Nossa IA avançada analisa os dados em tempo real.</p>
+                        </div>
+                        <div class="workflow-step" data-step="4">
+                            <div class="workflow-step-icon"><i class="fas fa-file-alt" aria-hidden="true"></i></div>
+                            <h3 class="text-xl font-semibold mb-2">Geração do Laudo</h3>
+                            <p>Um laudo preciso é criado em segundos.</p>
+                        </div>
+                        <div class="workflow-step" data-step="5">
+                            <div class="workflow-step-icon"><i class="fas fa-check-circle" aria-hidden="true"></i></div>
+                            <h3 class="text-xl font-semibold mb-2">Revisão e Aprovação</h3>
+                            <p>Revise, ajuste e aprove o laudo final.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="testimonials" class="py-20 px-6 bg-gray-800">
+            <div class="container mx-auto">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-gradient">
+                    O que Dizem Nossos Usuários
+                </h2>
+                <div class="testimonial-container">
+                    <div class="testimonial-slider">
+                        <div class="testimonial active">
+                            <div class="testimonial-card">
+                                <p>"A LaudAI revolucionou minha prática radiológica. Agora posso produzir laudos de alta qualidade em uma fração do tempo."</p>
+                                <p class="author">Dr. Carlos Silva</p>
+                                <p class="position">Radiologista, Hospital São Paulo</p>
+                            </div>
+                        </div>
+                        <div class="testimonial active">
+                            <div class="testimonial-card">
+                                <p>"A precisão e eficiência da LaudAI são impressionantes. É como ter um assistente altamente qualificado 24/7."</p>
+                                <p class="author">Dr. Mateus Esmeraldo</p>
+                                <p class="position">Neurorradiologista, Cambridge, Reino Unido</p>
+                            </div>
+                        </div>
+                        <div class="testimonial">
+                            <div class="testimonial-card">
+                                <p>"Desde que implementamos a LaudAI, nossa produtividade aumentou em 40%. É uma ferramenta indispensável."</p>
+                                <p class="author">Dr. Matheus Fritzen</p>
+                                <p class="position">Médico Residente HCFMUSP/Inrad</p>
+                            </div>
+                        </div>
+                        <div class="testimonial">
+                            <div class="testimonial-card">
+                                <p>"A LaudAI proporciona uma precisão incrível nos laudos, ajudando a melhorar o diagnóstico e o tratamento dos pacientes."</p>
+                                <p class="author">Dr. Bruno</p>
+                                <p class="position">Radiologista, SP/SP</p>
+                            </div>
+                        </div>
+                        <div class="testimonial">
+                            <div class="testimonial-card">
+                                <p>"Eu acredito que a interface intuitiva da LaudAI facilita o uso diário e melhora a eficiência no trabalho."</p>
+                                <p class="author">Dr. Rafael Andrade</p>
+                                <p class="position">Radiologista, Sao Petersburgo, RU</p>
+                            </div>
+                        </div>
+                        <div class="testimonial">
+                            <div class="testimonial-card">
+                                <p>"A LaudAI é uma ferramenta essencial para qualquer radiologista que deseja melhorar a qualidade dos seus laudos."</p>
+                                <p class="author">Dra. Mariana Costa</p>
+                                <p class="position">Radiologista, Instituto de Radiologia</p>
+                            </div>
+                        </div>
+                        <div class="testimonial">
+                            <div class="testimonial-card">
+                                <p>"A agilidade e precisão dos laudos gerados pela LaudAI são impressionantes."</p>
+                                <p class="author">Dr. Paulo Menezes</p>
+                                <p class="position">Radiologista, Hospital Albert Einstein</p>
+                            </div>
+                        </div>
+                        <div class="testimonial">
+                            <div class="testimonial-card">
+                                <p>"A LaudAI permite um ganho significativo de tempo, possibilitando focar em outras atividades importantes."</p>
+                                <p class="author">Dra. Carla Fernandes</p>
+                                <p class="position">Radiologista, Hospital das Américas</p>
+                            </div>
+                        </div>
+                        <div class="testimonial">
+                            <div class="testimonial-card">
+                                <p>"Os laudos gerados pela LaudAI são extremamente detalhados e precisos."</p>
+                                <p class="author">Dr. André Santos</p>
+                                <p class="position">Radiologista, Hospital Santa Cruz</p>
+                            </div>
+                        </div>
+                        <div class="testimonial">
+                            <div class="testimonial-card">
+                                <p>"A LaudAI é uma ferramenta inovadora que transforma a forma como trabalhamos na radiologia."</p>
+                                <p class="author">Dra. Fernanda Lima</p>
+                                <p class="position">Radiologista, Belo Horizonte/MG</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="interactive-demo" class="py-20 px-6 bg-gray-800">
+            <div class="container mx-auto">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-gradient">
+                    Experimente a LaudAI
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="glass-effect p-6 rounded-lg hover-scale text-center cursor-pointer col-span-2 bg-gradient-to-r from-blue-500 to-teal-400">
+                        <i class="fas fa-money-bill-wave text-4xl mb-4 text-white" aria-hidden="true"></i>
+                        <h3 class="text-xl font-semibold mb-2 text-white">Planos LaudAI (Em breve!)</h3>
+                        <p class="text-white mb-4">Aguarde o lançamento do LaudAI 1.0! </p>
+                        <div class="text-white">
+                            <p>99,90 - Até 1000 laudos por mês</p>
+                            <p>169,90 - Até 2000 laudos por mês</p>
+                            <p>Ilimitados - 229,00 + Suporte</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect p-6 rounded-lg hover-scale text-center cursor-pointer" onclick="window.location.href='https://laudai.online/profile'">
+                        <i class="fas fa-laptop-code text-4xl mb-4 text-accent-color" aria-hidden="true"></i>
+                        <h3 class="text-xl font-semibold mb-2">Comece seu Trial Agora!</h3>
+                    </div>
+                    <div class="glass-effect p-6 rounded-lg hover-scale text-center cursor-pointer" onclick="window.location.href='https://labs.laudai.online'">
+                        <i class="fas fa-chart-line text-4xl mb-4 text-accent-color" aria-hidden="true"></i>
+                        <h3 class="text-xl font-semibold mb-2">Veja os Resultados</h3>
+                    </div>
+                    <div class="glass-effect p-6 rounded-lg hover-scale text-center cursor-pointer" onclick="window.location.href='#testimonials'">
+                        <i class="fas fa-comments text-4xl mb-4 text-accent-color" aria-hidden="true"></i>
+                        <h3 class="text-xl font-semibold mb-2">Feedback dos Usuários</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="how-is-laudai" class="py-20 px-6 bg-gray-800">
+            <div class="container mx-auto">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-gradient">
+                    Como é a LaudAI
+                </h2>
+                <div class="mt-8">
+                    <iframe src="https://story.screenspace.io/laudai-4191/e_6d5f6554" width="100%" height="600px" allow="clipboard-write" scrolling="no" style="min-height:400px;border:none;background:#c2e8ff"></iframe>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 py-8">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-wrap justify-between items-center">
+                <div class="w-full md:w-1/3 mb-6 md:mb-0">
+                    <h3 class="text-2xl font-bold mb-2">
+                        <span class="text-gradient">Laud</span>AI
+                    </h3>
+                    <p class="text-gray-400">Revolucionando a radiologia com IA avançada.</p>
+                </div>
+                <div class="w-full md:w-1/3 mb-6 md:mb-0">
+                    <h4 class="text-lg font-semibold mb-4">Links Rápidos</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#features" class="text-gray-400 hover:text-white transition duration-300">Recursos</a></li>
+                        <li><a href="#how-it-works" class="text-gray-400 hover:text-white transition duration-300">Como Funciona</a></li>
+                        <li><a href="#testimonials" class="text-gray-400 hover:text-white transition duration-300">Depoimentos</a></li>
+                        <li><a href="#plans" class="text-gray-400 hover:text-white transition duration-300">Planos</a></li>
+                    </ul>
+                </div>
+                <div class="w-full md:w-1/3">
+                    <h4 class="text-lg font-semibold mb-4">Siga-nos</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-facebook-f text-xl" aria-hidden="true"></i><span class="sr-only">Facebook</span>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-twitter text-xl" aria-hidden="true"></i><span class="sr-only">Twitter</span>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-linkedin-in text-xl" aria-hidden="true"></i><span class="sr-only">LinkedIn</span>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-instagram text-xl" aria-hidden="true"></i><span class="sr-only">Instagram</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>© 2024 LaudAI. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <div class="back-to-top" aria-label="Voltar ao topo">
+        <i class="fas fa-arrow-up" aria-hidden="true"></i>
+    </div>
+
+    <div class="chatbot-button" aria-label="Abrir formulário de contato">
+        <i class="fas fa-comments"></i>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/TextPlugin.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            gsap.registerPlugin(ScrollTrigger, TextPlugin);
+            ScrollTrigger.config({ limitCallbacks: true, ignoreMobileResize: true });
+
+            particlesJS("particles-js", {
+                particles: {
+                    number: { value: 80, density: { enable: true, value_area: 800 } },
+                    color: { value: "#20808D" },
+                    shape: { type: "circle" },
+                    opacity: { value: 0.5, random: false },
+                    size: { value: 3, random: true },
+                    line_linked: { enable: true, distance: 150, color: "#2E5E5A", opacity: 0.4, width: 1 },
+                    move: { enable: true, speed: 2, direction: "none", random: true, straight: false, out_mode: "out", bounce: false }
+                },
+                interactivity: {
+                    detect_on: "canvas",
+                    events: { onhover: { enable: true, mode: "repulse" }, onclick: { enable: true, mode: "push" }, resize: true },
+                    modes: { repulse: { distance: 100, duration: 0.4 }, push: { particles_nb: 4 } }
+                },
+                retina_detect: true
+            });
+
+            const steps = gsap.utils.toArray('.workflow-step');
+            const path = document.querySelector(".workflow-path path");
+            const pathLength = path.getTotalLength();
+
+            gsap.set(path, {
+                strokeDasharray: pathLength,
+                strokeDashoffset: pathLength,
+            });
+
+            function revealSteps() {
+                steps.forEach((step, index) => {
+                    gsap.to(step, {
+                        opacity: 1,
+                        y: 0,
+                        scale: 1,
+                        duration: 0.5,
+                        ease: "power2.out",
+                        scrollTrigger: {
+                            trigger: step,
+                            start: "top 80%",
+                            end: "bottom 20%",
+                            toggleActions: "play none none reverse"
+                        },
+                        delay: index * 0.2
+                    });
+
+                    gsap.to(step, {
+                        y: -10,
+                        repeat: -1,
+                        yoyo: true,
+                        duration: 1.5,
+                        ease: "power1.inOut",
+                        delay: index * 0.2
+                    });
+                });
+            }
+
+            revealSteps();
+
+            const workflowTl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: ".workflow-container",
+                    start: "top center",
+                    end: "bottom center",
+                    scrub: 1,
+                    onUpdate: self => {
+                        gsap.to(path, {
+                            strokeDashoffset: pathLength - (self.progress * pathLength),
+                            duration: 0.1,
+                        });
+                    }
+                }
+            });
+
+            gsap.utils.toArray('.fade-in').forEach(elem => {
+                gsap.from(elem, {
+                    opacity: 0,
+                    y: 50,
+                    duration: 1,
+                    scrollTrigger: {
+                        trigger: elem,
+                        start: "top 80%",
+                        end: "bottom 20%",
+                        toggleActions: "play none none reverse"
+                    }
+                });
+            });
+
+            gsap.to("#hero img", {
+                yPercent: -20,
+                ease: "none",
+                scrollTrigger: {
+                    trigger: "#hero",
+                    start: "top top",
+                    end: "bottom top",
+                    scrub: true
+                }
+            });
+
+            const mobileMenuButton = document.querySelector('button[aria-label="Toggle menu"]');
+            const mobileMenu = document.querySelector('.md\\:flex');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                mobileMenu.classList.toggle('flex');
+            });
+
+            const backToTopButton = document.querySelector('.back-to-top');
+            window.addEventListener('scroll', () => {
+                if (window.pageYOffset > 300) {
+                    backToTopButton.classList.add('visible');
+                } else {
+                    backToTopButton.classList.remove('visible');
+                }
+            });
+
+            backToTopButton.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            gsap.utils.toArray('#features .glass-effect').forEach((feature, index) => {
+                gsap.from(feature, {
+                    opacity: 0,
+                    y: 50,
+                    duration: 0.8,
+                    ease: "power2.out",
+                    scrollTrigger: {
+                        trigger: feature,
+                        start: "top 80%",
+                        end: "bottom 20%",
+                        toggleActions: "play none none reverse"
+                    },
+                    delay: index * 0.2
+                });
+            });
+
+            gsap.utils.toArray('#testimonials .glass-effect').forEach((testimonial, index) => {
+                gsap.from(testimonial, {
+                    opacity: 0,
+                    x: index % 2 === 0 ? -50 : 50,
+                    duration: 0.8,
+                    ease: "power2.out",
+                    scrollTrigger: {
+                        trigger: testimonial,
+                        start: "top 80%",
+                        end: "bottom 20%",
+                        toggleActions: "play none none reverse"
+                    }
+                });
+            });
+
+            gsap.from('#interactive-demo .glass-effect', {
+                opacity: 0,
+                y: 50,
+                duration: 0.8,
+                ease: "power2.out",
+                scrollTrigger: {
+                    trigger: '#interactive-demo .glass-effect',
+                    start: "top 80%",
+                    end: "bottom 20%",
+                    toggleActions: "play none none reverse"
+                }
+            });
+
+            gsap.to('header', {
+                backgroundColor: 'rgba(26, 32, 44, 0.9)',
+                duration: 0.3,
+                scrollTrigger: {
+                    trigger: 'body',
+                    start: "top -50",
+                    end: "top -51",
+                    toggleActions: "play none none reverse"
+                }
+            });
+
+            const heroHeadline = document.querySelector('#hero h1');
+            const heroText = heroHeadline.textContent;
+            heroHeadline.innerHTML = '';
+            for (let i = 0; i < heroText.length; i++) {
+                const span = document.createElement('span');
+                span.textContent = heroText[i];
+                span.style.opacity = '0';
+                heroHeadline.appendChild(span);
+                gsap.to(span, {
+                    opacity: 1,
+                    duration: 0.1,
+                    delay: i * 0.05
+                });
+            }
+
+            let konamiCode = [];
+            const konamiSequence = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+            document.addEventListener('keydown', (e) => {
+                konamiCode.push(e.key);
+                konamiCode = konamiCode.slice(-10);
+                if (konamiCode.join(',') === konamiSequence.join(',')) {
+                    alert('Você descobriu um easter egg! Parabéns!');
+                    document.body.style.transform = 'rotate(180deg)';
+                    setTimeout(() => {
+                        document.body.style.transform = 'none';
+                    }, 3000);
+                }
+            });
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        gsap.to(entry.target, {
+                            opacity: 1,
+                            y: 0,
+                            duration: 0.5,
+                            ease: "power2.out"
+                        });
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.fade-in').forEach(elem => observer.observe(elem));
+
+            const preloader = document.querySelector('.preloader');
+
+            window.addEventListener('load', () => {
+                gsap.to(preloader, {
+                    opacity: 0,
+                    duration: 0.5,
+                    onComplete: () => preloader.remove()
+                });
+            });
+
+            // Testimonial Slider
+            const testimonialSlider = document.querySelector('.testimonial-slider');
+            const testimonials = gsap.utils.toArray('.testimonial');
+            let currentIndex = 0;
+
+            function showNextTestimonial() {
+                const nextIndex1 = (currentIndex + 1) % testimonials.length;
+                const nextIndex2 = (currentIndex + 2) % testimonials.length;
+
+                gsap.to(testimonialSlider, {
+                    xPercent: -50 * ((currentIndex / 2) + 1),
+                    duration: 1,
+                    ease: "power2.inOut",
+                    onComplete: () => {
+                        testimonials.forEach((testimonial, index) => {
+                            testimonial.classList.remove('active');
+                            if (index === nextIndex1 || index === nextIndex2) {
+                                testimonial.classList.add('active');
+                            }
+                        });
+                    }
+                });
+
+                currentIndex = nextIndex1;
+            }
+
+            setInterval(showNextTestimonial, 10000); // Change testimonial every 10 seconds
+
+            const demoScreen = document.getElementById('demo-screen');
+            const demoInput = document.getElementById('demo-input');
+            const demoSubmit = document.getElementById('demo-submit');
+
+            demoSubmit.addEventListener('click', () => {
+                const command = demoInput.value;
+                demoScreen.innerHTML += `<p class="text-blue-400">> ${command}</p>`;
+                
+                setTimeout(() => {
+                    let response = "Desculpe, não entendi o comando.";
+                    if (command.toLowerCase().includes("laudo")) {
+                        response = "Gerando laudo radiológico com IA... Laudo concluído em 5 segundos!";
+                    } else if (command.toLowerCase().includes("ajuda")) {
+                        response = "Comandos disponíveis: 'gerar laudo', 'estatísticas', 'ajuda'";
+                    }
+                    demoScreen.innerHTML += `<p class="text-green-400">${response}</p>`;
+                    demoScreen.scrollTop = demoScreen.scrollHeight;
+                }, 1000);
+
+                demoInput.value = "";
+            });
+
+            const chatbotButton = document.querySelector('.chatbot-button');
+            chatbotButton.addEventListener('click', () => {
+                const name = prompt('Digite seu nome:');
+                const email = prompt('Digite seu email:');
+                const message = prompt('Digite sua mensagem:');
+                if (name && email && message) {
+                    window.location.href = `mailto:suporte@laudai.online?subject=Contato de ${name}&body=${message}&from=${email}`;
+                }
+            });
+
+            document.addEventListener("DOMContentLoaded", function() {
+                var lazyImages = [].slice.call(document.querySelectorAll("img.lazy"));
+
+                if ("IntersectionObserver" in window) {
+                    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+                        entries.forEach(function(entry) {
+                            if (entry.isIntersecting) {
+                                let lazyImage = entry.target;
+                                lazyImage.src = lazyImage.dataset.src;
+                                lazyImage.classList.remove("lazy");
+                                lazyImageObserver.unobserve(lazyImage);
+                            }
+                        });
+                    });
+
+                    lazyImages.forEach(function(lazyImage) {
+                        lazyImageObserver.observe(lazyImage);
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

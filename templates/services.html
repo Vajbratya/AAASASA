@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Termos de Serviço - LaudAI{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-16 max-w-4xl">
+    <h1 class="text-4xl md:text-5xl font-extrabold mb-8 text-center text-primary-600">Termos de Serviço - LaudAI</h1>
+    
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 space-y-6">
+        <p class="text-lg text-gray-700 dark:text-gray-300">Bem-vindo à LaudAI! Estes termos de serviço regem o uso de nosso site e serviços. Ao acessar ou usar nossos serviços, você concorda em ficar vinculado a estes termos.</p>
+
+        <div id="faqAccordion" class="space-y-4">
+            {% for section in sections %}
+            <div class="faq-item">
+                <button class="flex justify-between items-center w-full text-left text-2xl font-semibold text-primary-600 dark:text-primary-400 py-2" aria-expanded="false" aria-controls="faq-content-{{ loop.index }}">
+                    {{ section.title }}
+                    <svg class="w-6 h-6 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </button>
+                <div id="faq-content-{{ loop.index }}" class="faq-content hidden mt-2 space-y-2 text-gray-700 dark:text-gray-300">
+                    {{ section.content | safe }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<button id="backToTop" class="fixed bottom-8 right-8 bg-primary-600 text-white p-2 rounded-full shadow-lg hidden transition-opacity duration-300" aria-label="Voltar ao topo">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+</button>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const faqItems = document.querySelectorAll('.faq-item');
+        const backToTopButton = document.getElementById('backToTop');
+
+        faqItems.forEach(item => {
+            const button = item.querySelector('button');
+            const content = item.querySelector('.faq-content');
+            button.addEventListener('click', () => {
+                const isExpanded = button.getAttribute('aria-expanded') === 'true';
+                button.setAttribute('aria-expanded', !isExpanded);
+                content.classList.toggle('hidden');
+                button.querySelector('svg').classList.toggle('rotate-180');
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.remove('hidden');
+                backToTopButton.classList.add('opacity-100');
+            } else {
+                backToTopButton.classList.remove('opacity-100');
+                backToTopButton.classList.add('opacity-0');
+            }
+        });
+
+        backToTopButton.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    });
+</script>
+{% endblock %}
+    

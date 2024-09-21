@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SVQW9L8T8E"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-SVQW9L8T8E');
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logout - LaudAI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #1f1f3d;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .logout-container {
+            background: #2e2e5c;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 1s ease;
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .logout-container h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #00b0ff;
+        }
+
+        .logout-container p {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        button {
+            padding: 15px;
+            background-color: #00b0ff;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 4px 15px rgba(0, 176, 255, 0.4);
+        }
+
+        button:hover {
+            background-color: #fff;
+            color: #00b0ff;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 176, 255, 0.6);
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logout-container">
+            <h1>Logout LaudAI</h1>
+            <p>Você saiu com sucesso. Obrigado por usar o LaudAI.</p>
+            <button onclick="location.href='{{ url_for('login') }}'">Login</button>
+        </div>
+    </div>
+</body>
+</html>
