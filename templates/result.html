@@ -90,25 +90,41 @@
                         <button @click="toggleMarkdownPreview()" class="px-3 py-1 bg-secondary text-secondary-foreground rounded-md shadow hover:bg-secondary/90 transition focus:outline-none focus:ring-2 focus:ring-secondary" aria-label="Alternar Pré-Visualização Markdown">
                             <i :class="showMarkdownPreview ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
                         </button>
+                        <button @click="toggleTheme()" class="px-3 py-1 bg-secondary text-secondary-foreground rounded-md shadow hover:bg-secondary/90 transition focus:outline-none focus:ring-2 focus:ring-secondary" aria-label="Alternar Tema">
+                            <i :class="isDarkMode ? 'fas fa-sun' : 'fas fa-moon'"></i>
+                        </button>
                     </div>
                     <!-- Editor and Preview -->
-                    <div>
-                        <div x-show="!showMarkdownPreview" x-transition>
-                            <div id="editor" contenteditable="true" @input="updateEditorContent" class="editor-content bg-muted p-4 rounded-md overflow-y-auto text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-primary dark:bg-zinc-800"></div>
+                    <div class="relative">
+                        <div class="absolute top-2 right-2">
+                            <span class="text-xs text-gray-500" x-text="'Caracteres: ' + characterCount"></span>
                         </div>
-                        <div x-show="showMarkdownPreview" x-transition>
-                            <div id="preview" class="editor-content bg-muted p-4 rounded-md overflow-y-auto text-sm sm:text-base dark:bg-zinc-800" x-html="marked(editorContent)"></div>
+                        <div>
+                            <div x-show="!showMarkdownPreview" x-transition>
+                                <div id="editor" contenteditable="true" @input="updateEditorContent" class="editor-content bg-white dark:bg-zinc-800 p-4 rounded-md overflow-y-auto text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-primary border border-gray-300 dark:border-zinc-700"></div>
+                            </div>
+                            <div x-show="showMarkdownPreview" x-transition>
+                                <div id="preview" class="editor-content bg-white dark:bg-zinc-800 p-4 rounded-md overflow-y-auto text-sm sm:text-base border border-gray-300 dark:border-zinc-700" x-html="marked(editorContent)"></div>
+                            </div>
                         </div>
                     </div>
                     <!-- Action Buttons -->
                     <div class="flex space-x-2 justify-center">
-                        <button @click="copyToClipboard('editor')" :disabled="isLoading" class="flex items-center space-x-2 px-4 py-2 bg-primary text-primary-foreground rounded-md shadow hover:bg-primary/90 transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary">
+                        <button @click="copyToClipboard('editorContent')" :disabled="isLoading" class="flex items-center space-x-2 px-4 py-2 bg-primary text-primary-foreground rounded-md shadow hover:bg-primary/90 transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary">
                             <i class="fas fa-copy"></i>
                             <span>Copiar do Editor</span>
                         </button>
                         <button @click="saveLaudo()" :disabled="isLoading" class="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-md shadow hover:bg-green-700 transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-600">
                             <i class="fas fa-save"></i>
                             <span>Salvar Laudo</span>
+                        </button>
+                        <button @click="exportPDF()" :disabled="isLoading" class="flex items-center space-x-2 px-4 py-2 bg-yellow-500 text-white rounded-md shadow hover:bg-yellow-600 transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                            <i class="fas fa-file-pdf"></i>
+                            <span>Exportar PDF</span>
+                        </button>
+                        <button @click="resetEditor()" :disabled="isLoading" class="flex items-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-md shadow hover:bg-red-700 transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-600">
+                            <i class="fas fa-eraser"></i>
+                            <span>Resetar Editor</span>
                         </button>
                     </div>
                 </div>
@@ -147,14 +163,24 @@
             showNotification: false,
             notificationMessage: '',
             showMarkdownPreview: false,
-            editorContent: '{{ laudo | safe | escape }}',
+            isDarkMode: false,
+            editorContent: '{{ laudo | safe | escape | replace("\n", "\\n") }}',
+            characterCount: 0,
+
+            init() {
+                this.characterCount = this.editorContent.length;
+                this.$watch('editorContent', value => {
+                    this.characterCount = value.length;
+                });
+                this.applyTheme();
+            },
 
             copyToClipboard(elementId) {
-                const element = document.getElementById(elementId);
                 let text;
-                if (element.tagName.toLowerCase() === 'div' && element.hasAttribute('contenteditable')) {
-                    text = element.innerHTML;
+                if (elementId === 'editorContent') {
+                    text = this.editorContent.replace(/<[^>]*>?/gm, ''); // Remove HTML tags
                 } else {
+                    const element = document.getElementById(elementId);
                     text = element.innerText;
                 }
                 navigator.clipboard.writeText(text).then(() => {
@@ -169,7 +195,8 @@
             },
 
             transferToEditor() {
-                this.editorContent = document.getElementById('laudoContent').innerHTML;
+                const content = document.getElementById('laudoContent').innerHTML;
+                this.editorContent = content;
                 this.activeTab = 'editor';
                 this.notificationMessage = 'Conteúdo transferido para o editor!';
                 this.showNotification = true;
@@ -187,6 +214,19 @@
 
             toggleMarkdownPreview() {
                 this.showMarkdownPreview = !this.showMarkdownPreview;
+            },
+
+            toggleTheme() {
+                this.isDarkMode = !this.isDarkMode;
+                this.applyTheme();
+            },
+
+            applyTheme() {
+                if (this.isDarkMode) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
             },
 
             async saveLaudo() {
@@ -219,10 +259,68 @@
                     this.isLoading = false;
                     setTimeout(() => this.showNotification = false, 3000);
                 }
+            },
+
+            async exportPDF() {
+                this.isLoading = true;
+                try {
+                    const response = await fetch("{{ url_for('export_pdf') }}", {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            laudo: this.editorContent
+                        })
+                    });
+
+                    if (response.ok) {
+                        const blob = await response.blob();
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'laudo.pdf';
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
+                        window.URL.revokeObjectURL(url);
+                        this.notificationMessage = 'PDF exportado com sucesso!';
+                        this.showNotification = true;
+                    } else {
+                        this.notificationMessage = 'Erro ao exportar PDF.';
+                        this.showNotification = true;
+                    }
+                } catch (error) {
+                    console.error('Erro ao exportar PDF:', error);
+                    this.notificationMessage = 'Erro ao exportar PDF. Por favor, tente novamente.';
+                    this.showNotification = true;
+                } finally {
+                    this.isLoading = false;
+                    setTimeout(() => this.showNotification = false, 3000);
+                }
+            },
+
+            resetEditor() {
+                if (confirm('Tem certeza de que deseja resetar o editor? Todas as alterações não salvas serão perdidas.')) {
+                    this.editorContent = '{{ laudo | safe | escape | replace("\n", "\\n") }}';
+                    this.updateEditorDisplay();
+                    this.notificationMessage = 'Editor resetado para o conteúdo original.';
+                    this.showNotification = true;
+                    setTimeout(() => this.showNotification = false, 3000);
+                }
+            },
+
+            updateEditorDisplay() {
+                const editor = document.getElementById('editor');
+                if (editor) {
+                    editor.innerHTML = this.editorContent;
+                }
             }
         }
-    }
-</script>
-<!-- Include marked.js for Markdown parsing -->
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    </script>
+    <!-- Include marked.js for Markdown parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- Include FontAwesome for icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 {% endblock %}
