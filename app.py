@@ -86,7 +86,7 @@ def generate_report_anthropic(exame, achados):
             raise ValueError("A variável de ambiente SYSTEM_PROMPT não está definida")
 
         response = anthropic_client.messages.create(
-            model="claude-3-5-sonnet-20240620",
+            model="claude-3-5-sonnet-20241022",
             max_tokens=6000,
             temperature=0.5,
             system=[
