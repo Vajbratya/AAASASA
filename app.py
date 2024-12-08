@@ -10,6 +10,8 @@ from openai import AsyncOpenAI
 import asyncio
 from flask_wtf.csrf import CSRFProtect
 from functools import wraps
+from datetime import datetime
+
 
 # Configuração de logging
 logging.basicConfig(level=logging.INFO)
@@ -431,6 +433,12 @@ def save_laudo():
         db.session.rollback()
         logger.error(f"Erro ao salvar laudo: {str(e)}")
         return jsonify({"error": "Falha ao salvar o laudo."}), 500
+
+@app.context_processor
+def utility_processor():
+    def get_year():
+        return datetime.now().year
+    return dict(get_year=get_year)
 
 if __name__ == "__main__":
     with app.app_context():
