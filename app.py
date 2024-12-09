@@ -328,9 +328,9 @@ def get_report(report_id):
         "laudo": report.laudo
     }), 200
 
-@app.route("/manage/templates", methods=["GET", "POST"])
+@app.route("/templates", methods=["GET", "POST"])
 @login_required
-def manage_templates():  # This matches the URL being used in the template
+def templates_route():
     user = User.query.filter_by(unique_id=session.get("user_id")).first()
     if request.method == "POST":
         template_name = request.form["template_name"]
@@ -341,7 +341,7 @@ def manage_templates():  # This matches the URL being used in the template
             template = Template.query.get(template_id)
             if template.user_id != user.id:
                 flash("Acesso não autorizado para editar este template.", "danger")
-                return redirect(url_for("manage_templates"))
+                return redirect(url_for("templates_route"))
             template.name = template_name
             template.content = template_content
         else:
@@ -360,11 +360,35 @@ def manage_templates():  # This matches the URL being used in the template
             flash("Falha ao salvar o template no banco de dados.", "danger")
             logger.error(f"Erro ao salvar template no banco de dados: {str(e)}")
 
-        return redirect(url_for("manage_templates"))
-    
-    templates = Template.query.filter_by(user_id=user.id).all()
-    return render_template("templates.html", templates=templates, user_picture=user.picture)
+        return redirect(url_for("templates_route"))
+    else:
+        templates = Template.query.filter_by(user_id=user.id).all()
+        return render_template("templates.html", templates=templates, user_picture=user.picture)
 
+@app.route("/template/<int:template_id>", methods=["GET", "DELETE"])
+@login_required
+def template_detail(template_id):
+    user = User.query.filter_by(unique_id=session.get("user_id")).first()
+    template = Template.query.get_or_404(template_id)
+
+    if template.user_id != user.id:
+        return jsonify({"error": "Acesso não autorizado"}), 401
+
+    if request.method == "GET":
+        return jsonify({
+            "id": template.id,
+            "name": template.name,
+            "content": template.content
+        })
+
+    if request.method == "DELETE":
+        try:
+            db.session.delete(template)
+            db.session.commit()
+            return jsonify({"success": "Template deletado"}), 200
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({"error": str(e)}), 500
 
 @app.route('/search_laudos')
 @login_required
