@@ -6,10 +6,17 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate, upgrade
 from oauthlib.oauth2 import WebApplicationClient
 from anthropic import Anthropic
+from datetime import datetime
 from openai import AsyncOpenAI
 import asyncio
 from flask_wtf.csrf import CSRFProtect
 from functools import wraps
+
+@app.context_processor
+def utility_processor():
+    def get_year():
+        return datetime.now().year
+    return dict(get_year=get_year)
 
 # Configuração de logging
 logging.basicConfig(level=logging.INFO)
