@@ -268,7 +268,8 @@
                     <a href="{{ url_for('meus_laudos') }}" class="neumorphic-button">
                         Meus Laudos
                     </a>
-                    <a href="{{ url_for('manage_templates') }}" class="neumorphic-button">
+                    <!-- FIXED HERE: Changed 'manage_templates' to 'templates_route' to eliminate the BuildError -->
+                    <a href="{{ url_for('templates_route') }}" class="neumorphic-button">
                         Templates <span class="badge-new">NOVO</span>
                     </a>
                     <button onclick="showModal('newsModal')" class="bg-[var(--primary-color)] hover:bg-[var(--secondary-color)] text-white font-bold py-3 px-6 rounded-lg text-center transform hover:scale-[1.02] transition duration-300 w-full md:w-auto">
@@ -338,7 +339,6 @@
                 <p class="mb-6">A LaudAI é uma IA especificamente treinada para escrever laudos completos, por finetuning com datasets públicos mundiais e multicêntricos. Ela usa a tecnologia RAG (Retrieval Augmented Generation) para acessar uma base de conhecimento de milhões de laudos e produzir relatórios precisos e eficientes.</p>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Step 1 -->
                     <div class="glass-card cursor-pointer group relative" onclick="toggleTutorial('passo1')">
                         <i class="fas fa-file-medical text-4xl text-center mb-4 text-gray-400 group-hover:text-white transition duration-300"></i>
                         <h3 class="text-lg font-semibold mb-2 group-hover:text-white transition duration-300">Passo 1: Escolha o exame</h3>
@@ -348,7 +348,6 @@
                             <p>Na página de geração de laudos, escreva qual o exame que gostaria de escrever seu laudo. Clique aqui para saber quais exames nossa IA tem maior e menor acurácia em comparação com os melhores especialistas. A LaudAI irá usar essa informação para gerar um laudo específico para o exame escolhido.</p>
                         </div>
                     </div>
-                    <!-- Step 2 -->
                     <div class="glass-card cursor-pointer group relative" onclick="toggleTutorial('passo2')">
                         <i class="fas fa-keyboard text-4xl text-center mb-4 text-gray-400 group-hover:text-white transition duration-300"></i>
                         <h3 class="text-lg font-semibold mb-2 group-hover:text-white transition duration-300">Passo 2: Descreva os achados</h3>
@@ -358,7 +357,6 @@
                             <p>Insira os achados do exame no campo de texto. Use termos médicos precisos e descreva os achados de forma concisa e organizada.</p>
                         </div>
                     </div>
-                    <!-- Step 3 -->
                     <div class="glass-card cursor-pointer group relative" onclick="toggleTutorial('passo3')">
                         <i class="fas fa-brain text-4xl text-center mb-4 text-gray-400 group-hover:text-white transition duration-300"></i>
                         <h3 class="text-lg font-semibold mb-2 group-hover:text-white transition duration-300">Passo 3: LaudAI gera o laudo</h3>
@@ -368,7 +366,6 @@
                             <p>A LaudAI usa a tecnologia RAG para resgatar informações relevantes de milhões de laudos existentes e gerar um relatório completo e preciso. Você poderá editar e personalizar o laudo gerado.</p>
                         </div>
                     </div>
-                    <!-- Step 4 -->
                     <div class="glass-card cursor-pointer group relative" onclick="toggleTutorial('passo4')">
                         <i class="fas fa-edit text-4xl text-center mb-4 text-gray-400 group-hover:text-white transition duration-300"></i>
                         <h3 class="text-lg font-semibold mb-2 group-hover:text-white transition duration-300">Passo 4: Revise e edite o laudo</h3>
@@ -378,7 +375,6 @@
                             <p>Após a geração do laudo pela LaudAI, revise cuidadosamente o conteúdo e avalie as recomendações. Ao escolher uma recomendação, o laudo será refeito ajustando o ponto sugerido. Além disso, você pode fazer edições adicionais conforme necessário.</p>
                         </div>
                     </div>
-                    <!-- Step 5 -->
                     <div class="glass-card cursor-pointer group relative" onclick="toggleTutorial('passo5')">
                         <i class="fas fa-file-alt text-4xl text-center mb-4 text-gray-400 group-hover:text-white transition duration-300"></i>
                         <h3 class="text-lg font-semibold mb-2 group-hover:text-white transition duration-300">Passo 5: Selecionar Template</h3>
@@ -388,7 +384,6 @@
                             <p>Agora você pode marcar um laudo como template em "Meus Laudos". A LaudAI usará esse modelo como base para futuros laudos, garantindo consistência e personalização.</p>
                         </div>
                     </div>
-                    <!-- Step 6 -->
                     <div class="glass-card cursor-pointer group relative" onclick="toggleTutorial('passo6')">
                         <i class="fas fa-layer-group text-4xl text-center mb-4 text-gray-400 group-hover:text-white transition duration-300"></i>
                         <h3 class="text-lg font-semibold mb-2 group-hover:text-white transition duration-300">Passo 6: Adicionar Templates</h3>
