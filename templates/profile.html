@@ -1,155 +1,484 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR" class="h-full scroll-smooth">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!-- Google Tag Manager -->
+    <script>
+        (function(w,d,s,l,i){
+            w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});
+            var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+            j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+            f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-PHXLDFDG');
+    </script>
+    <!-- End Google Tag Manager -->
 
-    <!-- Example of a clean, modern, and upscale visual theme -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LaudAI: IA Avançada para Laudos Radiológicos</title>
+
+    <!-- Meta Tags for SEO -->
+    <meta name="description" content="LaudAI é a plataforma de inteligência artificial que te coloca no controle da radiologia. Diga adeus à monotonia dos laudos e olá a diagnósticos de alta precisão, impulsionados por IA de ponta. Liberte seu tempo, eleve seus resultados e conquiste um novo patamar na radiologia! Experimente o poder da LaudAI hoje mesmo.">
+    <meta name="keywords" content="radiologia, inteligência artificial, laudos, ia, laudos radiológicos, diagnóstico, saúde, medicina, radiologista, tecnologia médica, eficiência, precisão, futuro da radiologia">
+
+    <!-- External Stylesheets -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.2/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
     <style>
+        :root {
+            --primary-color: #2F6B74;
+            --secondary-color: #CC7722;
+            --background-color: #111827;
+            --text-color: #F9FAFB;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --modal-bg: rgba(255, 255, 255, 0.07);
+            --tooltip-bg: rgba(55, 65, 81, 0.9);
+            --tooltip-text: #ffffff;
+        }
+
+        @font-face {
+            font-family: 'FK Grotesk Neue';
+            src: url("/static/fonts/FKGroteskNeue-Regular.woff2") format('woff2');
+            font-weight: 400;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'FK Grotesk Neue';
+            src: url("/static/fonts/FKGroteskNeue-Medium.woff2") format('woff2');
+            font-weight: 500;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'FK Grotesk Neue';
+            src: url("/static/fonts/FKGroteskNeue-Bold.woff2") format('woff2');
+            font-weight: 700;
+            font-style: normal;
+        }
+
         body {
-            margin: 0;
-            font-family: 'Inter', sans-serif;
-            background: #f8f9fb;
-            color: #333;
+            font-family: 'FK Grotesk Neue', 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            height: 100%;
+            overflow-x: hidden;
+            position: relative;
         }
 
-        .profile-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 4rem 2rem;
-        }
-
-        .profile-header {
-            background: linear-gradient(135deg, #5ea9fc, #8ec5fc);
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            border-radius: 0 0 2rem 2rem;
-            padding: 2.5rem 2rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            box-shadow: 0px 20px 40px rgba(0,0,0,0.1);
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(17, 24, 39, 0.85), rgba(47, 107, 116, 0.9));
+            z-index: -1;
         }
 
-        .profile-avatar {
-            width: 120px;
-            height: 120px;
-            background: #fff;
-            border-radius: 50%;
-            overflow: hidden;
-            margin-bottom: 1rem;
-            box-shadow: 0 0 0 4px #ffffff;
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'FK Grotesk Neue', sans-serif;
+            font-weight: 700;
         }
 
-        .profile-avatar img {
-            width: 100%;
-            height: auto;
-        }
-
-        .profile-name {
-            font-size: 1.8rem;
-            font-weight: 600;
-            color: #fff;
-            margin: 0.5rem 0;
-        }
-
-        .profile-subtext {
-            font-size: 1rem;
-            color: rgba(255,255,255,0.8);
-        }
-
-        .profile-content {
-            max-width: 800px;
-            width: 100%;
-            margin-top: 3rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .info-card {
-            background: #ffffff;
+        .glass-card {
+            background-color: var(--card-bg);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border-color);
             border-radius: 1rem;
             padding: 2rem;
-            width: 100%;
-            margin-bottom: 2rem;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        .info-card h2 {
-            margin: 0 0 1rem 0;
-            font-size: 1.4rem;
-            font-weight: 500;
+        .glass-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.25);
         }
 
-        .info-card p {
-            line-height: 1.6;
-            color: #555;
+        .hover-glow:hover {
+            box-shadow: 0 0 12px rgba(47, 107, 116, 0.7);
         }
 
-        /* Neumorphic-inspired button */
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 rgba(47,107,116,0.6); }
+            70% { box-shadow: 0 0 12px rgba(47,107,116,0.6); }
+            100% { box-shadow: 0 0 0 rgba(47,107,116,0.6); }
+        }
+
+        .generate-reports-button {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 1rem;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+            display: block;
+            width: fit-content;
+            margin: 0 auto;
+        }
+
+        .generate-reports-button:hover {
+            background-color: #2a5f68;
+            transform: translateY(-1px);
+            box-shadow: 0 5px 8px rgba(0,0,0,0.2);
+        }
+
         .neumorphic-button {
-            display: inline-block;
-            padding: 0.8rem 1.5rem;
-            margin-top: 1rem;
-            background: #f0f0f3;
-            border-radius: 999px;
-            box-shadow: 5px 5px 10px #d1d1d1,
-                        -5px -5px 10px #ffffff;
-            border: none;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            text-decoration: none;
-            color: #333;
-            transition: transform 0.1s ease-in-out;
+            background-color: rgba(255, 255, 255, 0.07);
+            border-radius: 0.75rem;
+            padding: 1rem 1.5rem;
+            color: var(--text-color);
+            font-weight: 600;
+            box-shadow: -3px -3px 6px rgba(255, 255, 255, 0.05), 3px 3px 6px rgba(0,0,0,0.3);
+            transition: all 0.2s ease;
+            text-align: center;
+            display: block;
+            width: fit-content;
+            margin: 1rem auto;
         }
 
         .neumorphic-button:hover {
-            transform: translateY(-2px);
+            box-shadow: -2px -2px 4px rgba(255,255,255,0.1), 2px 2px 4px rgba(0,0,0,0.3);
+            transform: translateY(-1px);
         }
 
-        .button-container {
+        .modal {
+            background-color: var(--modal-bg);
+            backdrop-filter: blur(8px);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .tooltip {
+            visibility: hidden;
+            background-color: var(--tooltip-bg);
+            color: var(--tooltip-text);
             text-align: center;
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            position: absolute;
+            z-index: 10;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            width: 200px;
+            font-size: 0.875rem;
+        }
+
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: var(--tooltip-bg) transparent transparent transparent;
+        }
+
+        .glass-card:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .badge-new {
+            display: inline-block;
+            background-color: #ff5722;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0,0,0,0);
+            white-space: nowrap;
+            border-width: 0;
         }
     </style>
 </head>
 <body>
-    <header class="profile-header">
-        <div class="profile-avatar">
-            <!-- Replace with the actual profile image -->
-            <img src="https://via.placeholder.com/120" alt="Profile Picture">
-        </div>
-        <h1 class="profile-name">Your Name</h1>
-        <p class="profile-subtext">Your Role / Title</p>
-    </header>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PHXLDFDG" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    <!-- End Google Tag Manager (noscript) -->
 
-    <main class="profile-container">
-        <section class="profile-content">
-            <div class="info-card">
-                <h2>About You</h2>
-                <p>
-                    This is a quick summary about your professional background, interests,
-                    and what you bring to the table. Make a strong impression here with
-                    a brief, compelling narrative about your experience and what drives you.
-                </p>
-            </div>
-
-            <div class="info-card">
-                <h2>Your Achievements</h2>
-                <p>
-                    Highlight key accomplishments or showcase projects that demonstrate your
-                    expertise and dedication. This helps visitors understand your unique value.
-                </p>
-            </div>
-
-            <div class="button-container">
-                <!-- Corrected the endpoint name as per your code, assuming it's `templates_route`. -->
-                <a href="{{ url_for('templates_route') }}" class="neumorphic-button">
-                    Manage Templates
+    <!-- Navigation Bar -->
+    <nav class="fixed top-0 left-0 w-full px-6 py-4 bg-black bg-opacity-60 backdrop-filter backdrop-blur-lg z-50 transition duration-300">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="#" class="hover-glow transition-transform duration-300 hover:scale-105">
+                <div class="text-white font-bold text-xl py-2 px-4 bg-transparent border border-white rounded">LaudAI</div>
+            </a>
+            <div class="flex space-x-4">
+                <a href="{{ url_for('index') }}" class="text-white font-semibold hover:text-[var(--primary-color)] transition duration-300">Início</a>
+                <a href="{{ url_for('logout') }}" class="text-white font-semibold hover:text-[var(--primary-color)] transition duration-300 flex items-center">
+                    <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
+                    <span class="sr-only">Sair</span>
                 </a>
             </div>
-        </section>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-6 py-24 mt-20">
+        <div class="grid grid-cols-1 gap-8 md:gap-12 lg:gap-16">
+            <!-- User Profile Section -->
+            <section class="glass-card">
+                <div class="flex flex-col items-center">
+                    <img src="{{ user_picture }}" alt="Foto de Perfil" class="w-24 h-24 rounded-full border-4 border-[var(--primary-color)] shadow-lg pulse transition-transform duration-300 hover:scale-105">
+                    <p class="text-gray-300 mt-2">{{ user_email }}</p>
+                </div>
+            </section>
+
+            <!-- Actions Section -->
+            <section class="glass-card">
+                <h2 class="text-xl font-bold mb-6 text-center">Ações</h2>
+                <div class="flex flex-col space-y-4 items-center">
+                    <a href="{{ url_for('generate_report') }}" class="generate-reports-button text-white font-extrabold rounded-full shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-300">
+                        Gerar Laudos com IA
+                    </a>
+                    <a href="{{ url_for('meus_laudos') }}" class="neumorphic-button">
+                        Meus Laudos
+                    </a>
+                    <a href="{{ url_for('manage_templates') }}" class="neumorphic-button">
+                        Templates <span class="badge-new">NOVO</span>
+                    </a>
+                    <button onclick="showModal('newsModal')" class="bg-[var(--primary-color)] hover:bg-[var(--secondary-color)] text-white font-bold py-3 px-6 rounded-lg text-center transform hover:scale-[1.02] transition duration-300 w-full md:w-auto">
+                        Notícias e Atualizações
+                    </button>
+                </div>
+            </section>
+
+            <!-- Statistics Section -->
+            <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate__animated animate__fadeIn">
+                <div class="glass-card">
+                    <h3 class="text-lg font-bold mb-4">Total de Relatórios</h3>
+                    <p class="text-3xl font-bold text-[var(--primary-color)]">{{ total_reports }}</p>
+                </div>
+                <div class="glass-card">
+                    <h3 class="text-lg font-bold mb-4">Tempo Economizado (h)</h3>
+                    <p class="text-3xl font-bold text-[var(--primary-color)]">{{ time_saved | round(1) }}</p>
+                </div>
+                <div class="glass-card relative">
+                    <h3 class="text-lg font-bold mb-4 flex items-center">
+                        Precisão da LaudAI
+                        <i class="fas fa-info-circle ml-2 text-gray-400 hover:text-white cursor-pointer" data-tooltip-target="tooltip-precision"></i>
+                    </h3>
+                    <p class="text-3xl font-bold text-[var(--primary-color)]">98%</p>
+                    <div id="tooltip-precision" role="tooltip" class="tooltip">
+                        Essa métrica é calculada automaticamente todo dia às 02:00h.<br>
+                        Confira mais detalhes em <a href="https://labs.laudai.online" target="_blank" class="text-blue-400 hover:underline">labs.laudai.online</a>.
+                    </div>
+                </div>
+
+                <div class="glass-card relative">
+                    <h3 class="text-lg font-bold mb-4 flex items-center">
+                        Tempo de Geração LaudAI
+                        <a href="https://labs.laudai.online" target="_blank" class="ml-2">
+                            <i class="fas fa-external-link-alt text-gray-400 hover:text-white cursor-pointer" data-tooltip-target="tooltip-generation"></i>
+                        </a>
+                    </h3>
+                    <p class="text-3xl font-bold text-[var(--primary-color)]">23s</p>
+                </div>
+
+                <div class="glass-card relative">
+                    <h3 class="text-lg font-bold mb-4 flex items-center">
+                        Usuários Ativos Diários
+                        <i class="fas fa-info-circle ml-2 text-gray-400 hover:text-white cursor-pointer" data-tooltip-target="tooltip-users"></i>
+                    </h3>
+                    <p class="text-3xl font-bold text-[var(--primary-color)]">183</p>
+                    <div id="tooltip-users" role="tooltip" class="tooltip">
+                        Número calculado representando a média dos visitantes ativos no site nos últimos três dias.
+                    </div>
+                </div>
+
+                <div class="glass-card relative">
+                    <h3 class="text-lg font-bold mb-4 flex items-center">
+                        Tempo Médio para Gerar um Laudo
+                        <i class="fas fa-info-circle ml-2 text-gray-400 hover:text-white cursor-pointer" data-tooltip-target="tooltip-time"></i>
+                    </h3>
+                    <p class="text-3xl font-bold text-[var(--primary-color)]">2 minutos</p>
+                    <div id="tooltip-time" role="tooltip" class="tooltip">
+                        Tempo médio perdido por exame por um Radiologista para criar e editar um laudo na plataforma RIS/PACS, sem a utilização de serviços para facilitar a criação de laudos.
+                    </div>
+                </div>
+            </section>
+
+            <!-- How It Works Section -->
+            <section class="glass-card">
+                <h2 class="text-xl font-bold mb-6">Como funciona a LaudAI?</h2>
+                <p class="mb-6">A LaudAI é uma IA especificamente treinada para escrever laudos completos, por finetuning com datasets públicos mundiais e multicêntricos. Ela usa a tecnologia RAG (Retrieval Augmented Generation) para acessar uma base de conhecimento de milhões de laudos e produzir relatórios precisos e eficientes.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Step 1 -->
+                    <div class="glass-card cursor-pointer group relative" onclick="toggleTutorial('passo1')">
+                        <i class="fas fa-file-medical text-4xl text-center mb-4 text-gray-400 group-hover:text-white transition duration-300"></i>
+                        <h3 class="text-lg font-semibold mb-2 group-hover:text-white transition duration-300">Passo 1: Escolha o exame</h3>
+                        <p class="group-hover:text-gray-200 transition duration-300">Selecione o tipo de exame para gerar o laudo.</p>
+                        <div id="passo1" class="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 p-4 bg-[var(--modal-bg)] rounded-lg shadow-lg hidden max-w-sm text-center">
+                            <h3 class="text-lg font-semibold mb-2">Escolha o exame</h3>
+                            <p>Na página de geração de laudos, escreva qual o exame que gostaria de escrever seu laudo. Clique aqui para saber quais exames nossa IA tem maior e menor acurácia em comparação com os melhores especialistas. A LaudAI irá usar essa informação para gerar um laudo específico para o exame escolhido.</p>
+                        </div>
+                    </div>
+                    <!-- Step 2 -->
+                    <div class="glass-card cursor-pointer group relative" onclick="toggleTutorial('passo2')">
+                        <i class="fas fa-keyboard text-4xl text-center mb-4 text-gray-400 group-hover:text-white transition duration-300"></i>
+                        <h3 class="text-lg font-semibold mb-2 group-hover:text-white transition duration-300">Passo 2: Descreva os achados</h3>
+                        <p class="group-hover:text-gray-200 transition duration-300">Digite seus achados de forma clara e concisa.</p>
+                        <div id="passo2" class="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 p-4 bg-[var(--modal-bg)] rounded-lg shadow-lg hidden max-w-sm text-center">
+                            <h3 class="text-lg font-semibold mb-2">Descreva os achados</h3>
+                            <p>Insira os achados do exame no campo de texto. Use termos médicos precisos e descreva os achados de forma concisa e organizada.</p>
+                        </div>
+                    </div>
+                    <!-- Step 3 -->
+                    <div class="glass-card cursor-pointer group relative" onclick="toggleTutorial('passo3')">
+                        <i class="fas fa-brain text-4xl text-center mb-4 text-gray-400 group-hover:text-white transition duration-300"></i>
+                        <h3 class="text-lg font-semibold mb-2 group-hover:text-white transition duration-300">Passo 3: LaudAI gera o laudo</h3>
+                        <p class="group-hover:text-gray-200 transition duration-300">Após digitar os achados, clique em "Gerar Laudos".</p>
+                        <div id="passo3" class="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 p-4 bg-[var(--modal-bg)] rounded-lg shadow-lg hidden max-w-sm text-center">
+                            <h3 class="text-lg font-semibold mb-2">LaudAI gera o laudo</h3>
+                            <p>A LaudAI usa a tecnologia RAG para resgatar informações relevantes de milhões de laudos existentes e gerar um relatório completo e preciso. Você poderá editar e personalizar o laudo gerado.</p>
+                        </div>
+                    </div>
+                    <!-- Step 4 -->
+                    <div class="glass-card cursor-pointer group relative" onclick="toggleTutorial('passo4')">
+                        <i class="fas fa-edit text-4xl text-center mb-4 text-gray-400 group-hover:text-white transition duration-300"></i>
+                        <h3 class="text-lg font-semibold mb-2 group-hover:text-white transition duration-300">Passo 4: Revise e edite o laudo</h3>
+                        <p class="group-hover:text-gray-200 transition duration-300">Revise o laudo gerado e veja as recomendações da LaudAI quanto ao laudo.</p>
+                        <div id="passo4" class="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 p-4 bg-[var(--modal-bg)] rounded-lg shadow-lg hidden max-w-sm text-center">
+                            <h3 class="text-lg font-semibold mb-2">Revise e edite o laudo</h3>
+                            <p>Após a geração do laudo pela LaudAI, revise cuidadosamente o conteúdo e avalie as recomendações. Ao escolher uma recomendação, o laudo será refeito ajustando o ponto sugerido. Além disso, você pode fazer edições adicionais conforme necessário.</p>
+                        </div>
+                    </div>
+                    <!-- Step 5 -->
+                    <div class="glass-card cursor-pointer group relative" onclick="toggleTutorial('passo5')">
+                        <i class="fas fa-file-alt text-4xl text-center mb-4 text-gray-400 group-hover:text-white transition duration-300"></i>
+                        <h3 class="text-lg font-semibold mb-2 group-hover:text-white transition duration-300">Passo 5: Selecionar Template</h3>
+                        <p class="group-hover:text-gray-200 transition duration-300">Use um laudo existente como template nos "Meus Laudos".</p>
+                        <div id="passo5" class="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 p-4 bg-[var(--modal-bg)] rounded-lg shadow-lg hidden max-w-sm text-center">
+                            <h3 class="text-lg font-semibold mb-2">Selecione um Template</h3>
+                            <p>Agora você pode marcar um laudo como template em "Meus Laudos". A LaudAI usará esse modelo como base para futuros laudos, garantindo consistência e personalização.</p>
+                        </div>
+                    </div>
+                    <!-- Step 6 -->
+                    <div class="glass-card cursor-pointer group relative" onclick="toggleTutorial('passo6')">
+                        <i class="fas fa-layer-group text-4xl text-center mb-4 text-gray-400 group-hover:text-white transition duration-300"></i>
+                        <h3 class="text-lg font-semibold mb-2 group-hover:text-white transition duration-300">Passo 6: Adicionar Templates</h3>
+                        <p class="group-hover:text-gray-200 transition duration-300">Adicione seus próprios templates de laudos.</p>
+                        <div id="passo6" class="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 p-4 bg-[var(--modal-bg)] rounded-lg shadow-lg hidden max-w-sm text-center">
+                            <h3 class="text-lg font-semibold mb-2">Adicionar Templates</h3>
+                            <p>Com essa funcionalidade, você pode adicionar seus próprios templates. A IA seguirá esse modelo para gerar laudos no seu estilo, garantindo precisão e personalização.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- News Modal -->
+        <div id="newsModal" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center px-6 py-12 z-50">
+            <div class="glass-card modal relative max-w-3xl w-full">
+                <button onclick="hideModal('newsModal')" class="text-white font-bold text-xl absolute top-4 right-4 transition duration-300 hover:text-red-400">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                    <span class="sr-only">Fechar</span>
+                </button>
+                <h2 class="text-xl font-bold mb-6 text-center">Notícias e Atualizações LaudAI</h2>
+                <div class="flex flex-col space-y-4">
+                    <div class="glass-card cursor-pointer hover:bg-gray-700 transition-transform transform hover:-translate-y-1" onclick="showNewsDetail('news1')">
+                        <h3 class="text-lg font-semibold text-white">Obrigado por 6000 laudos gerados!</h3>
+                        <p class="text-gray-300 mt-2">Estamos muito gratos por alcançar essa marca incrível de 6000 laudos gerados. Continuamos empenhados em oferecer a melhor tecnologia de IA.</p>
+                    </div>
+                    <div class="glass-card cursor-pointer hover:bg-gray-700 transition-transform transform hover:-translate-y-1" onclick="showNewsDetail('news2')">
+                        <h3 class="text-lg font-semibold text-white">Novidade: Recomendações para Aprimoramento do Laudo!</h3>
+                        <p class="text-gray-300 mt-2">Agora a LaudAI dá sugestões para aprimorar o Laudo gerado. Escolha uma recomendação e a LaudAI refará o Laudo ajustando o ponto sugerido.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- News Detail Modals -->
+        <div id="news1" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center px-6 py-12 z-50">
+            <div class="glass-card modal relative max-w-2xl w-full">
+                <button onclick="hideModal('news1')" class="text-white font-bold text-xl absolute top-4 right-4 transition duration-300 hover:text-red-400">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                    <span class="sr-only">Fechar</span>
+                </button>
+                <h2 class="text-xl font-bold mb-6 text-center">Obrigado por 6000 laudos gerados na plataforma</h2>
+                <p>Estamos muito gratos por alcançar essa marca incrível. Continuamos empenhados em oferecer a melhor tecnologia de IA para diagnósticos precisos.</p>
+            </div>
+        </div>
+
+        <div id="news2" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center px-6 py-12 z-50">
+            <div class="glass-card modal relative max-w-2xl w-full">
+                <button onclick="hideModal('news2')" class="text-white font-bold text-xl absolute top-4 right-4 transition duration-300 hover:text-red-400">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                    <span class="sr-only">Fechar</span>
+                </button>
+                <h2 class="text-xl font-bold mb-6 text-center">Novo guia para usar a LaudAI: Gerando Laudos Perfeitos!</h2>
+                <p>Acesse nosso guia completo com dicas e estratégias para aproveitar ao máximo a LaudAI.</p>
+            </div>
+        </div>
     </main>
+
+    <!-- Footer -->
+    <footer class="bg-black bg-opacity-60 backdrop-filter backdrop-blur-lg py-4 mt-12 transition duration-300">
+        <div class="max-w-7xl mx-auto text-center text-white">
+            © 2024 LaudAI. Todos os direitos reservados.
+            <div class="mt-2">
+                <a href="{{ url_for('privacy') }}" class="text-[var(--secondary-color)] hover:underline transition duration-300">Política de Privacidade</a> |
+                <a href="{{ url_for('services') }}" class="text-[var(--secondary-color)] hover:underline transition duration-300">Termos de Serviço</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- External Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <script>
+        function showModal(modalId) {
+            document.getElementById(modalId).classList.remove('hidden');
+        }
+
+        function hideModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        function toggleTutorial(contentId) {
+            const content = document.getElementById(contentId);
+            content.classList.toggle('hidden');
+        }
+
+        function showNewsDetail(newsId) {
+            document.getElementById(newsId).classList.remove('hidden');
+        }
+    </script>
 </body>
 </html>
