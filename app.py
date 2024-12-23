@@ -235,7 +235,8 @@ def generate_report():
 
         if laudo is None:
             flash('Falha ao gerar o laudo. Tente novamente mais tarde.', 'danger')
-            return redirect(url_for('generate_report_route'))
+            # FIXED: Changed 'generate_report_route' -> 'generate_report'
+            return redirect(url_for('generate_report'))
 
         report = Report(
             exame=exame,
@@ -256,7 +257,8 @@ def generate_report():
             db.session.rollback()
             logger.error(f"Erro no banco de dados: {str(e)}")
             flash('Ocorreu um erro ao salvar o relatório. Por favor, tente novamente.', 'danger')
-            return redirect(url_for('generate_report_route'))
+            # FIXED: Changed 'generate_report_route' -> 'generate_report'
+            return redirect(url_for('generate_report'))
 
     templates = Template.query.filter_by(user_id=user.id).all()
     return render_template("generate_report.html", user_picture=user.picture, templates=templates)
@@ -272,7 +274,7 @@ def result(report_id):
     report = Report.query.get_or_404(report_id)
     if report.user_id != user.id:
         flash("Acesso não autorizado a este relatório.", "danger")
-        return redirect(url_for('generate_report_route'))
+        return redirect(url_for('generate_report'))
 
     return render_template('result.html', laudo=report.laudo, user_picture=user.picture)
 
@@ -400,8 +402,8 @@ def search_laudos():
 
     reports = Report.query.filter(
         Report.user_id == user.id,
-        (Report.exame.ilike(f'%{query}%') | 
-         Report.achados.ilike(f'%{query}%') | 
+        (Report.exame.ilike(f'%{query}%') |
+         Report.achados.ilike(f'%{query}%') |
          Report.laudo.ilike(f'%{query}%'))
     ).all()
 
@@ -422,13 +424,12 @@ def apply_suggestion():
     if not suggestion:
         return jsonify({"error": "Sugestão inválida."}), 400
 
-    # Implementar lógica para aplicar a sugestão ao laudo
-    # Por exemplo, concatenar a sugestão ao laudo existente
+    # Exemplo simples: concatenar a sugestão ao laudo existente
     updated_laudo = f"{current_laudo}\n\nSugestão: {suggestion}"
 
     return jsonify({
         "laudo": updated_laudo,
-        "suggestions": []  # Atualizar com novas sugestões, se necessário
+        "suggestions": []
     }), 200
 
 @app.route('/save_laudo', methods=["POST"])
@@ -447,7 +448,6 @@ def save_laudo():
         return jsonify({"error": "Nenhum relatório encontrado para salvar."}), 404
 
     report.laudo = laudo
-
     try:
         db.session.commit()
         return jsonify({"message": "Laudo salvo com sucesso!"}), 200
@@ -456,6 +456,20 @@ def save_laudo():
         logger.error(f"Erro ao salvar laudo: {str(e)}")
         return jsonify({"error": "Falha ao salvar o laudo."}), 500
 
+# ------------------------------------------------------------------------------
+# Error Handlers for 404 and 500 (Matching Your Templates 404.html / 500.html)
+# ------------------------------------------------------------------------------
+@app.errorhandler(404)
+def not_found_error(e):
+    return render_template("404.html"), 404
+
+@app.errorhandler(500)
+def internal_error(e):
+    return render_template("500.html"), 500
+
+# ------------------------------------------------------------------------------
+# Inicialização da Aplicação
+# ------------------------------------------------------------------------------
 if __name__ == "__main__":
     with app.app_context():
         upgrade()
